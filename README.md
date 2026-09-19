@@ -1,135 +1,130 @@
-# Dossier
+# Enterprise RAG Knowledge Assistant
 
-Un assistant documentaire interne pour entreprises au Maroc, en français et en arabe.
-Projet personnel de 5ème année MIAGE.
+An internal document assistant for companies operating in Morocco, in French and Arabic.
+Final-year (Data & AI) personal project.
 
-On dépose des documents métier (factures, politiques RH, contrats, procédures), on pose une
-question dans l'une des deux langues, et on obtient une réponse courte avec la citation du
-document et de la page. Si l'information n'est pas dans les documents, le système le dit
-au lieu d'inventer.
+You upload business documents (invoices, HR policies, contracts, procedures), ask a question
+in either language, and get a short answer with a citation to the document and page. If the
+information is not in the documents, the system says so instead of making something up.
 
-Je voulais un projet qui ressemble à ce qu'une DSI marocaine demanderait vraiment, pas un
-chatbot de démo : des documents dans deux langues, des droits d'accès par département, et
-surtout une façon de mesurer si le modèle hallucine.
+I wanted a project that looks like what a Moroccan IT department would actually ask for,
+not a chatbot demo: documents in two languages, access rights per department, and above all
+a way to measure whether the model hallucinates.
 
-## Comment ça marche
+## How it works
 
 ```
-question ──► cache sémantique ──(hit)──► réponse en quelques ms
+question ──► semantic cache ──(hit)──► answer in a few ms
                  │ (miss)
                  ▼
-   recherche dense (Qdrant, embeddings multilingues)   ┐
-   + filtre droits d'accès + filtres métier            ├──► fusion RRF ──► top-k passages
-   recherche BM25 (numéros de facture, ICE, montants)  ┘            │
-                                                                    ▼
-                                            score trop faible ? ──► refus honnête
-                                                                    │
-                                                                    ▼
-                          LLM local (Ollama) : "réponds uniquement avec les SOURCES,
-                          cite [n] à chaque phrase, sinon réponds NOT_FOUND"
-                                                                    │
-                                                                    ▼
-                          vérification des citations + score d'ancrage ──► réponse
+   dense search (Qdrant, multilingual embeddings)        ┐
+   + access-control filter + business metadata filters   ├──► RRF fusion ──► top-k passages
+   BM25 keyword search (invoice numbers, ICE, amounts)   ┘            │
+                                                                      ▼
+                                              score too low? ──► honest refusal
+                                                                      │
+                                                                      ▼
+                          local LLM (Ollama): "answer only from the SOURCES,
+                          cite [n] on every sentence, otherwise reply NOT_FOUND"
+                                                                      │
+                                                                      ▼
+                          citation parsing + groundedness score ──► answer + sources
 ```
 
-Quelques choix que je peux défendre :
+Design choices I can defend:
 
-- **Recherche hybride.** Les embeddings comprennent "quand doit-on payer" pour retrouver
-  "délai de paiement", mais ils confondent facilement `F-2025-007` et `F-2025-001`. BM25
-  règle le second cas. Je fusionne les deux classements avec Reciprocal Rank Fusion pour
-  ne pas avoir de poids à régler à la main.
-- **Les filtres s'appliquent pendant la recherche, pas après.** Filtrer le top-k après coup
-  peut renvoyer zéro résultat à un utilisateur restreint et fuite des informations de
-  classement. Qdrant filtre sur les métadonnées pendant la recherche ANN.
-- **Le cache sémantique est dans Qdrant.** Une dépendance de moins que Redis, et une
-  recherche de question similaire est de toute façon une recherche vectorielle. Chaque
-  entrée est liée au périmètre d'accès de l'utilisateur, sinon un utilisateur RH pourrait
-  récupérer la réponse mise en cache par la finance.
-- **Le contrôle des hallucinations est en couches.** Seuil de pertinence avant d'appeler
-  le modèle, prompt restreint aux sources avec citations obligatoires, `NOT_FOUND`
-  autorisé, et une vérification lexicale après génération. Une réponse sans citation
-  valide est traitée comme un refus.
-- **Trois stratégies de découpage** (fixe, récursive, sémantique) avec un script de
-  comparaison, parce que c'est la question que tout le monde pose sur un RAG et que je
-  voulais une réponse chiffrée plutôt qu'une opinion.
+- **Hybrid search.** Embeddings understand that "when do we have to pay" should find
+  "délai de paiement", but they easily confuse `F-2025-007` with `F-2025-001`. BM25 handles
+  the second case. The two rankings are merged with Reciprocal Rank Fusion so there are no
+  weights to tune by hand.
+- **Filters run inside the search, not after it.** Filtering the top-k afterwards can return
+  zero results for a restricted user and leaks ranking information. Qdrant applies metadata
+  filters during the ANN search.
+- **The semantic cache lives in Qdrant.** One dependency fewer than Redis, and looking up a
+  similar question is a vector search anyway. Every entry is bound to the user's access
+  scope, otherwise an HR user could receive an answer cached by finance.
+- **Hallucination control is layered.** A relevance threshold before calling the model, a
+  prompt restricted to the sources with mandatory citations, `NOT_FOUND` as an allowed
+  answer, and a lexical check after generation. An answer without a valid citation is
+  treated as a refusal.
+- **Three chunking strategies** (fixed, recursive, semantic) with a comparison script,
+  because it is the question everyone asks about a RAG system and I wanted a measured
+  answer rather than an opinion.
 
-## Résultats
+## Results
 
-Jeu de 40 questions (français et arabe, dont 6 sans réponse dans le corpus) sur un corpus
-synthétique de 19 documents. Modèle de chat qwen3.5 4B via Ollama, embeddings
-multilingual-e5-small sur CPU.
+40 questions (French and Arabic, 6 of them with no answer in the corpus) over a synthetic
+corpus of 19 documents. Chat model qwen3.5 4B through Ollama, multilingual-e5-small
+embeddings on CPU.
 
-| Mesure | Valeur |
+| Metric | Value |
 |---|---|
-| Document attendu dans le top-5 | 100 % |
-| Questions avec réponse effectivement répondues | 34 / 34 |
-| Questions sans réponse effectivement refusées | 6 / 6 |
-| Réponses contenant la bonne valeur | 94 % |
-| Citations pointant vers le bon document | 98 % |
-| Latence médiane à froid | 3,6 s |
-| Latence médiane sur cache sémantique | 29 ms |
+| Expected document in the top 5 | 100 % |
+| Answerable questions actually answered | 34 / 34 |
+| Unanswerable questions actually refused | 6 / 6 |
+| Answers containing the expected value | 94 % |
+| Citations pointing at the right document | 98 % |
+| Median latency, cold | 3.6 s |
+| Median latency, semantic cache hit | 29 ms |
 
-Les 8 questions en arabe ont été répondues avec des citations valides, y compris celles
-dont la réponse n'existait qu'en français. Le rapport complet est dans
-[eval/results.md](eval/results.md) et la comparaison des découpages dans
-[eval/chunking.md](eval/chunking.md). Sur ce petit corpus les trois stratégies
-retrouvent le bon document ; le découpage récursif à 800 caractères produit 40 % de
-passages en moins que le découpage fixe pour le même rang moyen, donc moins de tokens par
-appel, c'est pourquoi il est par défaut.
+All 8 Arabic questions were answered with valid citations, including those whose answer only
+existed in a French document. The full report is in [eval/results.md](eval/results.md) and
+the chunking comparison in [eval/chunking.md](eval/chunking.md). On this small corpus all
+three strategies find the right document; recursive chunking at 800 characters produces
+40 % fewer passages than fixed chunking for the same mean rank, so fewer tokens per call,
+which is why it is the default.
 
-## Ce que j'ai appris en le construisant
+## What I learned building it
 
-- Une carte graphique de 8 Go ne fait pas tenir un modèle de chat 4B et bge-m3 en même
-  temps. Ollama les échange à chaque requête (10 à 17 s) et le runner d'embeddings
-  plante parfois avec une erreur 500. J'ai ajouté des réessais avec backoff, puis
-  déplacé les embeddings sur CPU avec sentence-transformers. C'est la configuration
-  utilisée pour les résultats ci-dessus.
-- Les petits modèles ne respectent pas toujours le token `NOT_FOUND` : ils écrivent
-  "لا توجد إجابة في المصادر" en prose. D'où la règle : pas de citation, pas de réponse.
-- Envoyer de l'arabe avec `curl` depuis Git Bash sous Windows corrompt l'encodage. Les
-  tests passent par `requests` en Python.
-- Le Qdrant embarqué n'accepte qu'un seul processus. Il faut arrêter l'API avant de
-  lancer les scripts d'ingestion, ou ingérer via l'API avec `--api`.
-- Générer des PDF en arabe avec fpdf2 demande une police et un moteur de mise en forme
-  bidirectionnelle ; la politique RH en arabe est donc en Markdown, ce que l'ingestion
-  gère de la même façon.
+- An 8 GB GPU does not hold a 4B chat model and bge-m3 at the same time. Ollama swaps them
+  on every request (10 to 17 s) and the embedding runner sometimes dies with a 500. I added
+  retries with backoff, then moved embeddings to the CPU with sentence-transformers. That is
+  the setup behind the numbers above.
+- Small models do not always respect the `NOT_FOUND` token: they write "لا توجد إجابة في
+  المصادر" in prose instead. Hence the rule: no citation, no answer.
+- Sending Arabic through `curl` from Git Bash on Windows corrupts the encoding. Tests go
+  through Python `requests`.
+- Embedded Qdrant accepts a single process. Stop the API before running the ingestion
+  scripts, or ingest through the API with `--api`.
+- Generating Arabic PDFs with fpdf2 needs a font plus a bidirectional shaping engine, so the
+  Arabic HR policy is Markdown, which the ingestion handles the same way.
 
-## Lancer le projet
+## Running it
 
-Installation :
+Install:
 
 ```bash
 pip install -e ".[dev,data,ui,embeddings]"
 cp .env.example .env
 ```
 
-Avec Ollama (configuration recommandée, celle des résultats) :
+With Ollama (recommended, the setup used for the results):
 
 ```bash
 ollama pull qwen3.5:4b
-# dans .env : LLM_BACKEND=ollama, OLLAMA_MODEL=qwen3.5:4b, EMBEDDING_BACKEND=sentence-transformers
-python scripts/generate_dataset.py     # corpus synthétique -> data/raw
-python scripts/ingest.py               # indexation
-uvicorn dossier.api:app --port 8000    # API, docs sur http://localhost:8000
-streamlit run ui/app.py                # interface sur http://localhost:8501
+# in .env: LLM_BACKEND=ollama, OLLAMA_MODEL=qwen3.5:4b, EMBEDDING_BACKEND=sentence-transformers
+python scripts/generate_dataset.py     # synthetic corpus -> data/raw
+python scripts/ingest.py               # build the index
+uvicorn dossier.api:app --port 8000    # API, docs at http://localhost:8000
+streamlit run ui/app.py                # UI at http://localhost:8501
 ```
 
-Clés de démo dans [config/users.yaml](config/users.yaml) : `admin-key` voit tout,
-`finance-key`, `hr-key` et `procurement-key` ne voient que leur département.
+Demo keys are in [config/users.yaml](config/users.yaml): `admin-key` sees everything;
+`finance-key`, `hr-key` and `procurement-key` only see their own department.
 
-Sans aucun modèle (tests, CI) : `LLM_BACKEND=stub EMBEDDING_BACKEND=hash MIN_DENSE_SCORE=0.15`.
-Le stub extrait des phrases au lieu de générer ; c'est un test de plomberie, pas de qualité.
+Without any model (tests, CI): `LLM_BACKEND=stub EMBEDDING_BACKEND=hash MIN_DENSE_SCORE=0.15`.
+The stub extracts sentences instead of generating; it is a plumbing test, not a quality test.
 
-Tout en conteneurs : `docker compose up --build` lance Qdrant, Ollama, l'API et l'interface.
+Everything in containers: `docker compose up --build` starts Qdrant, Ollama, the API and the UI.
 
-Évaluation et comparaison des découpages (API arrêtée) :
+Evaluation and chunking comparison (with the API stopped):
 
 ```bash
 python scripts/evaluate.py
 python scripts/compare_chunking.py --sizes 400 800
 ```
 
-## Exemple d'appel
+## Example call
 
 ```bash
 curl -X POST http://localhost:8000/ask -H "X-API-Key: finance-key" -H "Content-Type: application/json" \
@@ -148,35 +143,37 @@ curl -X POST http://localhost:8000/ask -H "X-API-Key: finance-key" -H "Content-T
 }
 ```
 
-Un utilisateur RH qui pose la même question obtient un refus : la facture n'est jamais
-récupérée pour lui, et la réponse en cache de la finance ne lui est pas servie.
+An HR user asking the same question gets a refusal: the invoice is never retrieved for them,
+and the answer cached for finance is not served to them either.
 
-## Organisation du code
+## Code layout
+
+The Python package is called `dossier` (French for a file of documents).
 
 ```
 src/dossier/
-  api.py          routes FastAPI (upload, ask, documents, cache)
-  pipeline.py     ingestion et réponse, assemble le reste
-  ingestion/      lecture PDF/OCR/texte, détection de langue, découpage
-  embeddings.py   sentence-transformers, Ollama ou hash (tests)
-  vectorstore.py  Qdrant avec filtres métier et droits d'accès
-  bm25_index.py   BM25 avec normalisation FR/AR (accents, diacritiques, ال)
-  retrieval.py    fusion RRF
-  generation.py   prompt, citations, score d'ancrage
-  cache.py        cache sémantique par périmètre d'accès
-  auth.py         clés API, rôles, départements
-scripts/          génération du corpus, ingestion, évaluation, comparaison des découpages
-eval/             40 questions et les rapports
-tests/            26 tests (découpage, pipeline, droits, cache, API)
+  api.py          FastAPI routes (upload, ask, documents, cache)
+  pipeline.py     ingestion and answering, wires everything together
+  ingestion/      PDF/OCR/text loading, language detection, chunking
+  embeddings.py   sentence-transformers, Ollama or hash (tests)
+  vectorstore.py  Qdrant with business filters and access control
+  bm25_index.py   BM25 with FR/AR normalisation (accents, diacritics, ال prefix)
+  retrieval.py    RRF fusion
+  generation.py   prompt, citations, groundedness score
+  cache.py        semantic cache scoped per access level
+  auth.py         API keys, roles, departments
+scripts/          corpus generation, ingestion, evaluation, chunking comparison
+eval/             the 40 questions and the reports
+tests/            26 tests (chunking, pipeline, access control, cache, API)
 ```
 
-## Pistes
+## Next steps
 
-- Juge LLM pour la fidélité (RAGAS) en plus du score lexical.
-- Reranker (bge-reranker-v2-m3) entre la fusion et la génération.
-- Extraction structurée des champs de facture (fournisseur, ICE, HT/TVA/TTC).
-- SSO à la place des clés API, et journal d'audit des questions.
-- Questions en darija avec un modèle adapté (Atlas-Chat).
+- LLM-as-judge faithfulness (RAGAS) alongside the lexical score.
+- A reranker (bge-reranker-v2-m3) between fusion and generation.
+- Structured extraction of invoice fields (supplier, ICE, HT/TVA/TTC).
+- SSO instead of API keys, and an audit log of questions.
+- Darija questions with a Darija-tuned model (Atlas-Chat).
 
-Le corpus est entièrement synthétique (société fictive "Maghreb Industries SA").
-Licence MIT.
+The corpus is entirely synthetic (fictional company "Maghreb Industries SA").
+MIT license.

@@ -44,7 +44,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Dossier - Enterprise RAG",
+    title="Enterprise RAG Knowledge Assistant",
     version=__version__,
     description="Bilingual (FR/AR) document assistant with cited, grounded answers.",
     lifespan=lifespan,

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "dossier"
 version = "0.1.0"
-description = "Bilingual (FR/AR) enterprise RAG and knowledge management system with grounded, cited answers."
+description = "Enterprise RAG Knowledge Assistant: bilingual (FR/AR) document assistant with grounded, cited answers."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

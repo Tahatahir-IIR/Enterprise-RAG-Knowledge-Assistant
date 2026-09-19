@@ -10,10 +10,10 @@ import os
 import requests
 import streamlit as st
 
-st.set_page_config(page_title="Dossier", page_icon="📁", layout="wide")
+st.set_page_config(page_title="Enterprise RAG Knowledge Assistant", page_icon="📁", layout="wide")
 
 with st.sidebar:
-    st.title("📁 Dossier")
+    st.title("📁 Enterprise RAG Knowledge Assistant")
     st.caption("Assistant documentaire interne · FR / AR")
     api_url = st.text_input("API URL", os.getenv("API_URL", "http://localhost:8000"))
     api_key = st.text_input("Clé API", os.getenv("API_KEY", "admin-key"), type="password")
