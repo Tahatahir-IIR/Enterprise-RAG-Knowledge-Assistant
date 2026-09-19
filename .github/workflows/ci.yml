@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      LLM_BACKEND: stub
+      EMBEDDING_BACKEND: hash
+      MIN_DENSE_SCORE: "0.15"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -e ".[dev,data]"
+      - name: Lint
+        run: ruff check src tests scripts
+      - name: Unit and API tests
+        run: pytest -q
+      - name: Smoke test the full pipeline offline (synthetic corpus, stub LLM)
+        run: |
+          python scripts/generate_dataset.py
+          python scripts/ingest.py
+          python scripts/evaluate.py --out eval/results-ci.md
+          python scripts/compare_chunking.py --sizes 800 --out eval/chunking-ci.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-reports
+          path: eval/*-ci.md
