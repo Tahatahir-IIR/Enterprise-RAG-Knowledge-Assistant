@@ -1,0 +1,19 @@
+# API keys for the demo. Replace with your SSO / IdP integration in production.
+# role: admin sees every department; analyst sees only the listed departments.
+users:
+  - api_key: admin-key
+    name: Admin
+    role: admin
+    departments: []
+  - api_key: finance-key
+    name: Salma (Finance)
+    role: analyst
+    departments: [finance]
+  - api_key: hr-key
+    name: Youssef (RH)
+    role: analyst
+    departments: [rh]
+  - api_key: procurement-key
+    name: Imane (Achats)
+    role: analyst
+    departments: [achats, finance]

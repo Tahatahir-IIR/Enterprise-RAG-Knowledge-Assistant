@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dossier"
+version = "0.1.0"
+description = "Bilingual (FR/AR) enterprise RAG and knowledge management system with grounded, cited answers."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "python-multipart>=0.0.9",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "qdrant-client>=1.9",
+    "rank-bm25>=0.2.2",
+    "langchain-text-splitters>=0.2",
+    "pymupdf>=1.24",
+    "httpx>=0.27",
+    "pyyaml>=6.0",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+embeddings = ["sentence-transformers>=3.0"]
+ocr = ["pytesseract>=0.3.10", "Pillow>=10.0"]
+ui = ["streamlit>=1.35", "requests>=2.31"]
+data = ["fpdf2>=2.7"]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4"]
+all = ["dossier[embeddings,ocr,ui,data,dev]"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+ignore = ["E501", "B008"]  # long lines in prompts/data; B008 is FastAPI's Depends/File/Form idiom

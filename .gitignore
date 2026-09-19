@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+data/
+!data/.gitkeep
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+# keep eval/results.md, eval/results.json and eval/chunking.md as evidence; ignore scratch runs
+eval/results-*.md
+eval/results-*.json
+eval/chunking-*.md
+eval/*.log
+.streamlit/
