@@ -1,0 +1,539 @@
+{
+  "n": 40,
+  "top_k": 5,
+  "llm": "ollama:qwen3.5:4b",
+  "embedding_dim": 384,
+  "chunk_strategy": "recursive",
+  "retrieval_hit_at_k": 1.0,
+  "mrr": 0.944,
+  "answered_when_answerable": 1.0,
+  "refused_when_unanswerable": 1.0,
+  "hallucination_rate": 0.0,
+  "keyword_accuracy": 0.941,
+  "citation_validity": 0.978,
+  "median_latency_ms": 3591,
+  "median_cache_latency_ms": 29,
+  "cache_hit_rate_on_repeat": 0.85,
+  "rows": [
+    {
+      "id": 1,
+      "question": "Combien de jours de congé annuel payé a droit un salarié ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Un salarié bénéficie de 22 jours ouvrables de congé annuel payé après une année de service continu [1]. Les salariés de moins de 18 ans bénéficient de 2 jours supplémentaires par mois de service [1].",
+      "citations": [
+        "politique_conges.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 4259
+    },
+    {
+      "id": 2,
+      "question": "Combien de jours avant le départ faut-il déposer une demande de congé ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "La demande de congé doit être déposée au moins 15 jours calendaires avant la date de départ [1].",
+      "citations": [
+        "politique_conges.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3400
+    },
+    {
+      "id": 3,
+      "question": "Combien de jours de congé peut-on reporter sur l'année suivante ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le report des congés non pris sur l'année suivante est limité à 5 jours ouvrables [1].",
+      "citations": [
+        "politique_conges.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3308
+    },
+    {
+      "id": 4,
+      "question": "Combien de jours de congé pour le mariage du salarié ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Pour le mariage du salarié, le nombre de jours de congé exceptionnel est de 4 jours [1].",
+      "citations": [
+        "politique_conges.pdf#p2"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3597
+    },
+    {
+      "id": 5,
+      "question": "Sous quel délai faut-il transmettre un certificat médical ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le certificat médical doit être transmis à la DRH dans les 48 heures [1][5].",
+      "citations": [
+        "politique_conges.pdf#p2",
+        "politique_conges_ar.md#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3431
+    },
+    {
+      "id": 6,
+      "question": "كم عدد أيام العطلة السنوية المؤدى عنها؟",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "يُستفيد كل أجير من 22 يوم عمل من العطلة السنوية المؤدى عنها بعد سنة من الخدمة المتواصلة [1][5].",
+      "citations": [
+        "politique_conges_ar.md#p1",
+        "politique_conges.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3773
+    },
+    {
+      "id": 7,
+      "question": "كم يوما من العطلة يمنح عند زواج الأجير؟",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "يُمنح 4 أيام عطلة عند زواج الأجير [1][3].",
+      "citations": [
+        "politique_conges_ar.md#p1",
+        "politique_conges.pdf#p2"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3478
+    },
+    {
+      "id": 8,
+      "question": "ما هي مدة الإشعار المسبق لطلب العطلة؟",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "يجب تقديم طلب العطلة قبل 15 يوماً على الأقل من تاريخ المغادرة [1][5].",
+      "citations": [
+        "politique_conges_ar.md#p1",
+        "politique_conges.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3526
+    },
+    {
+      "id": 9,
+      "question": "Combien de jours de télétravail par semaine sont autorisés ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le télétravail est limité à 2 jours par semaine [1].",
+      "citations": [
+        "politique_teletravail.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3440
+    },
+    {
+      "id": 10,
+      "question": "Quel est le montant de l'indemnité mensuelle de télétravail ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "L'indemnité forfaitaire de télétravail est de 300 MAD par mois [1].",
+      "citations": [
+        "politique_teletravail.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3614
+    },
+    {
+      "id": 11,
+      "question": "Quel jour de la semaine la présence sur site est-elle obligatoire ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le lundi est une journée de présence obligatoire sur site [1].",
+      "citations": [
+        "politique_teletravail.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3430
+    },
+    {
+      "id": 12,
+      "question": "Quel est le montant TTC de la facture F-2025-003 ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le montant TTC de la facture F-2025-003 est de 20 400,00 MAD [1].",
+      "citations": [
+        "facture_F-2025-003.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 4087
+    },
+    {
+      "id": 13,
+      "question": "Quel est le numéro ICE du fournisseur de la facture F-2025-001 ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le numéro ICE du fournisseur de la facture F-2025-001 est 001234567000089 [4].",
+      "citations": [
+        "facture_F-2025-001.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 4235
+    },
+    {
+      "id": 14,
+      "question": "Quel est le délai de paiement indiqué sur les factures fournisseurs ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le délai de paiement standard est de 60 jours fin de mois [1][3][4][5].",
+      "citations": [
+        "procedure_achats.pdf#p1",
+        "facture_F-2025-004.pdf#p1",
+        "facture_F-2025-007.pdf#p1",
+        "facture_F-2025-005.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3733
+    },
+    {
+      "id": 15,
+      "question": "Quel taux de pénalité de retard de paiement figure sur les factures ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le taux de pénalité de retard de paiement figurant sur les factures est de 1,5 % par mois de retard [2][3][4][5].",
+      "citations": [
+        "facture_F-2025-007.pdf#p1",
+        "facture_F-2025-004.pdf#p1",
+        "facture_F-2025-005.pdf#p1",
+        "facture_F-2025-008.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 4232
+    },
+    {
+      "id": 16,
+      "question": "Quel est le numéro de bon de commande de la facture F-2025-007 ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le numéro de bon de commande de la facture F-2025-007 est BC-2025-107 [1].",
+      "citations": [
+        "facture_F-2025-007.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 4258
+    },
+    {
+      "id": 17,
+      "question": "À partir de quel montant faut-il trois devis comparatifs ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "À partir de 50 000 MAD HT, trois devis comparatifs sont requis [1][3].",
+      "citations": [
+        "procedure_achats.pdf#p1",
+        "procedure_achats.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3929
+    },
+    {
+      "id": 18,
+      "question": "Qui valide un achat de 30 000 MAD HT ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Pour un achat de 30 000 MAD HT, la validation est assurée par le responsable de service et le Directeur Achats [1].",
+      "citations": [
+        "procedure_achats.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 4046
+    },
+    {
+      "id": 19,
+      "question": "Qu'est-ce que le rapprochement à trois voies ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le rapprochement à trois voies consiste à rapprocher la facture, le bon de commande (BC) et le procès-verbal (PV) de réception avant tout paiement [1].",
+      "citations": [
+        "procedure_achats.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3699
+    },
+    {
+      "id": 20,
+      "question": "Quelle est la durée du contrat cadre avec Atlas Bureautique ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "La durée du contrat cadre est de 24 mois, renouvelable par tacite reconduction pour des périodes de 12 mois [1][2].",
+      "citations": [
+        "contrat_cadre_atlas_bureautique.pdf#p1",
+        "contrat_cadre_atlas_bureautique.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3966
+    },
+    {
+      "id": 21,
+      "question": "Quelle remise s'applique sur les commandes supérieures à 30 000 MAD HT chez Atlas Bureautique ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Une remise de 8% est appliquée sur toute commande supérieure à 30 000 MAD HT [1].",
+      "citations": [
+        "contrat_cadre_atlas_bureautique.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3995
+    },
+    {
+      "id": 22,
+      "question": "Quel est le préavis de résiliation du contrat Atlas Bureautique ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le préavis de résiliation du contrat est de 3 mois [2].",
+      "citations": [
+        "contrat_cadre_atlas_bureautique.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3912
+    },
+    {
+      "id": 23,
+      "question": "Quel tribunal est compétent en cas de litige avec Atlas Bureautique ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le Tribunal de Commerce de Casablanca est compétent en cas de litige avec Atlas Bureautique [2].",
+      "citations": [
+        "contrat_cadre_atlas_bureautique.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3552
+    },
+    {
+      "id": 24,
+      "question": "Quelle est la longueur minimale d'un mot de passe ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "La longueur minimale d'un mot de passe est de 12 caractères [1].",
+      "citations": [
+        "charte_securite_si.txt#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3523
+    },
+    {
+      "id": 25,
+      "question": "Tous les combien de jours faut-il changer son mot de passe ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Les mots de passe doivent être renouvelés tous les 90 jours [1].",
+      "citations": [
+        "charte_securite_si.txt#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3492
+    },
+    {
+      "id": 26,
+      "question": "Quel numéro appeler pour signaler un incident de sécurité ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Pour signaler un incident de sécurité, il faut appeler le numéro interne **4444** [1].",
+      "citations": [
+        "charte_securite_si.txt#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3691
+    },
+    {
+      "id": 27,
+      "question": "Quel est le plafond d'un repas en déplacement ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le plafond d'un repas en déplacement est de 150 MAD par repas sur justificatif [1].",
+      "citations": [
+        "procedure_notes_de_frais.md#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3549
+    },
+    {
+      "id": 28,
+      "question": "Quelle est l'indemnité kilométrique pour un véhicule personnel ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "L'indemnité kilométrique pour un véhicule personnel est de 2,5 MAD par kilomètre [1].",
+      "citations": [
+        "procedure_notes_de_frais.md#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3585
+    },
+    {
+      "id": 29,
+      "question": "Avant quelle date du mois doit-on saisir ses notes de frais ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Les notes de frais doivent être saisies dans l'ERP avant le 5 du mois suivant [1].",
+      "citations": [
+        "procedure_notes_de_frais.md#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3768
+    },
+    {
+      "id": 30,
+      "question": "Quel est le plafond d'une nuit d'hôtel au Maroc ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le plafond d'une nuit d'hôtel au Maroc est de 900 MAD par nuit maximum [1].",
+      "citations": [
+        "procedure_notes_de_frais.md#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3600
+    },
+    {
+      "id": 31,
+      "question": "Quel est le chiffre d'affaires de Maghreb Industries en 2024 ?",
+      "answerable": false,
+      "found": false,
+      "hit": false,
+      "answer": "Je n'ai pas trouvé cette information dans les documents auxquels vous avez accès.",
+      "citations": [],
+      "grounding": 1.0,
+      "latency_ms": 3732
+    },
+    {
+      "id": 32,
+      "question": "Qui est le directeur général de l'entreprise ?",
+      "answerable": false,
+      "found": false,
+      "hit": false,
+      "answer": "Je n'ai pas trouvé cette information dans les documents auxquels vous avez accès.",
+      "citations": [],
+      "grounding": 1.0,
+      "latency_ms": 3154
+    },
+    {
+      "id": 33,
+      "question": "Quelle est la politique de prime de fin d'année ?",
+      "answerable": false,
+      "found": false,
+      "hit": false,
+      "answer": "Je n'ai pas trouvé cette information dans les documents auxquels vous avez accès.",
+      "citations": [],
+      "grounding": 1.0,
+      "latency_ms": 3244
+    },
+    {
+      "id": 34,
+      "question": "ما هو راتب المدير المالي؟",
+      "answerable": false,
+      "found": false,
+      "hit": false,
+      "answer": "لم أجد هذه المعلومة في المستندات التي يمكنك الاطلاع عليها.",
+      "citations": [],
+      "grounding": 1.0,
+      "latency_ms": 29
+    },
+    {
+      "id": 35,
+      "question": "Quelle est la capitale de l'Australie ?",
+      "answerable": false,
+      "found": false,
+      "hit": false,
+      "answer": "Je n'ai pas trouvé cette information dans les documents auxquels vous avez accès.",
+      "citations": [],
+      "grounding": 1.0,
+      "latency_ms": 3129
+    },
+    {
+      "id": 36,
+      "question": "Combien de jours de congé pour la naissance d'un enfant ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Pour la naissance d'un enfant, le salarié bénéficie de 3 jours de congé exceptionnel [1].",
+      "citations": [
+        "politique_conges.pdf#p2"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3550
+    },
+    {
+      "id": 37,
+      "question": "Quel est le délai de livraison maximal d'Atlas Bureautique ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le délai de livraison maximal est de 10 jours ouvrables à compter de la réception du bon de commande [2].",
+      "citations": [
+        "contrat_cadre_atlas_bureautique.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3669
+    },
+    {
+      "id": 38,
+      "question": "Les clés USB personnelles sont-elles autorisées ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Non, les clés USB personnelles ne sont pas autorisées [1].",
+      "citations": [
+        "charte_securite_si.txt#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 3402
+    },
+    {
+      "id": 39,
+      "question": "Quel est le taux de TVA sur la facture F-2025-005 ?",
+      "answerable": true,
+      "found": true,
+      "hit": true,
+      "answer": "Le montant TTC de la facture F-2025-003 est de 20 400,00 MAD [1].",
+      "citations": [
+        "facture_F-2025-003.pdf#p1"
+      ],
+      "grounding": 1.0,
+      "latency_ms": 25
+    },
+    {
+      "id": 40,
+      "question": "Quelle est la politique de remboursement des frais de taxi à l'étranger ?",
+      "answerable": false,
+      "found": false,
+      "hit": false,
+      "answer": "Je n'ai pas trouvé cette information dans les documents auxquels vous avez accès.",
+      "citations": [],
+      "grounding": 1.0,
+      "latency_ms": 3219
+    }
+  ]
+}
