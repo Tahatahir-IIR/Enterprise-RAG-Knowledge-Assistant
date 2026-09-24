@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # LLM
     llm_backend: Literal["ollama", "openai", "stub"] = "ollama"
     ollama_url: str = "http://localhost:11434"
-    ollama_model: str = "qwen2.5:7b"
+    ollama_model: str = "qwen3.5:4b"
     openai_base_url: str = "https://api.openai.com/v1"
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"

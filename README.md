@@ -1,7 +1,9 @@
 # Enterprise RAG Knowledge Assistant
 
+[![ci](https://github.com/Tahatahir-IIR/Enterprise-RAG-Knowledge-Assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/Tahatahir-IIR/Enterprise-RAG-Knowledge-Assistant/actions/workflows/ci.yml)
+
 An internal document assistant for companies operating in Morocco, in French and Arabic.
-Final-year (Data & AI) personal project.
+Personal project, final year of computer engineering at EMSI Casablanca.
 
 You upload business documents (invoices, HR policies, contracts, procedures), ask a question
 in either language, and get a short answer with a citation to the document and page. If the
